@@ -1,10 +1,12 @@
-package br.com.antoniocostadossantos.orgs.activity
+package br.com.antoniocostadossantos.orgs.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.com.antoniocostadossantos.orgs.dao.ProdutosDAO
 import br.com.antoniocostadossantos.orgs.databinding.ActivityFormularioProdutoBinding
+import br.com.antoniocostadossantos.orgs.extensions.tentaCarregarImagem
 import br.com.antoniocostadossantos.orgs.model.Produto
+import br.com.antoniocostadossantos.orgs.ui.dialogs.FormularioImagemDialog
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity() {
@@ -12,13 +14,25 @@ class FormularioProdutoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFormularioProdutoBinding
     private val dao = ProdutosDAO()
 
+    private var url: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        title = "Cadastrar Produto"
+
         binding = ActivityFormularioProdutoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.btnNovoProduto.setOnClickListener {
             novoProduto()
+        }
+
+        binding.ivImagemProduto.setOnClickListener {
+            FormularioImagemDialog(this).mostrarImagemDialog(urlPadrao = url) { imagemUrl ->
+                url = imagemUrl
+                binding.ivImagemProduto.tentaCarregarImagem(url)
+            }
         }
     }
 
@@ -36,7 +50,8 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val novoProduto = Produto(
             nomeProduto = inputNome,
             descricaoProduto = inputDescricao,
-            precoProduto = precoValidado
+            precoProduto = precoValidado,
+            imagemUrl = url
         )
         dao.adicionarProduto(novoProduto)
         finish()

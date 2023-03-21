@@ -1,11 +1,11 @@
-package br.com.antoniocostadossantos.orgs.activity
+package br.com.antoniocostadossantos.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import br.com.antoniocostadossantos.orgs.activity.adapter.ListaProdutosAdapter
 import br.com.antoniocostadossantos.orgs.dao.ProdutosDAO
 import br.com.antoniocostadossantos.orgs.databinding.ActivityListaProdutosBinding
+import br.com.antoniocostadossantos.orgs.ui.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
