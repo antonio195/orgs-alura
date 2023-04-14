@@ -9,11 +9,12 @@ import br.com.antoniocostadossantos.orgs.extensions.tentaCarregarImagem
 import br.com.antoniocostadossantos.orgs.model.Produto
 import java.math.BigDecimal
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto>
+    produtos: List<Produto> = emptyList(),
+    var quandoClicaNoItem: (produto: Produto) -> Unit = {}
 ) :
     RecyclerView.Adapter<ListaProdutosAdapter.ProdutosViewHolder>() {
 
@@ -29,6 +30,10 @@ class ListaProdutosAdapter(
 
     override fun onBindViewHolder(holder: ProdutosViewHolder, position: Int) {
         holder.bind(produtos[position])
+
+        holder.itemView.setOnClickListener {
+            quandoClicaNoItem(produtos[position])
+        }
     }
 
     override fun getItemCount() = produtos.size

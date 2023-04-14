@@ -3,15 +3,15 @@ package br.com.antoniocostadossantos.orgs.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import br.com.antoniocostadossantos.orgs.dao.ProdutosDAO
+import br.com.antoniocostadossantos.database.AppDatabase
 import br.com.antoniocostadossantos.orgs.databinding.ActivityListaProdutosBinding
 import br.com.antoniocostadossantos.orgs.ui.adapter.ListaProdutosAdapter
 
 class ListaProdutosActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListaProdutosBinding
-    private val dao = ProdutosDAO()
-    private val adapterProdutos = ListaProdutosAdapter(context = this, produtos = dao.buscaTodos())
+    private val database = AppDatabase
+    private val adapterProdutos = ListaProdutosAdapter(context = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,8 @@ class ListaProdutosActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        adapterProdutos.atualizaProdutos(dao.buscaTodos())
+        val produtoDao = database.getDatabaseInstance(this).produtoDao()
+        adapterProdutos.atualizaProdutos(produtoDao.buscaTodos())
     }
 
     private fun novoProduto() {
@@ -37,5 +38,15 @@ class ListaProdutosActivity : AppCompatActivity() {
     private fun initRecyclerViewProdutos() {
         val recyclerView = binding.rvProdutos
         recyclerView.adapter = adapterProdutos
+
+        adapterProdutos.quandoClicaNoItem = {
+            val intent = Intent(
+                this,
+                DetalhesProdutoActivity::class.java
+            ).apply {
+                putExtra("CHAVE_PRODUTO", it)
+            }
+            startActivity(intent)
+        }
     }
 }

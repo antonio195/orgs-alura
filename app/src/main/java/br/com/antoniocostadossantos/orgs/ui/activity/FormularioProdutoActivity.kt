@@ -2,7 +2,7 @@ package br.com.antoniocostadossantos.orgs.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import br.com.antoniocostadossantos.orgs.dao.ProdutosDAO
+import br.com.antoniocostadossantos.database.AppDatabase
 import br.com.antoniocostadossantos.orgs.databinding.ActivityFormularioProdutoBinding
 import br.com.antoniocostadossantos.orgs.extensions.tentaCarregarImagem
 import br.com.antoniocostadossantos.orgs.model.Produto
@@ -12,8 +12,7 @@ import java.math.BigDecimal
 class FormularioProdutoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFormularioProdutoBinding
-    private val dao = ProdutosDAO()
-
+    private val database = AppDatabase
     private var url: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +52,13 @@ class FormularioProdutoActivity : AppCompatActivity() {
             precoProduto = precoValidado,
             imagemUrl = url
         )
-        dao.adicionarProduto(novoProduto)
+
+        val produtoDao = database.getDatabaseInstance(this).produtoDao()
+
+        produtoDao.salva(
+            novoProduto
+        )
+
         finish()
     }
 }
